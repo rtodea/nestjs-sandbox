@@ -15,24 +15,25 @@ describe('MostCommonWordService', () => {
     expect(mostCommonWord).toBeTruthy();
   });
 
-  const doTest = (input: string, expectedOutput: string[]) => {
-    it(`should return ${input}`, () => {
+  const doTest = (index: number, input: string, expectedOutput: string[]) => {
+    it(`${index} should return ${input}`, () => {
       expect(mostCommonWord.top3Words(input)).toEqual(expectedOutput);
     });
   };
 
-  doTest('a a a  b  c c  d d d d  e e e e e', ['e', 'd', 'a']);
-  doTest('a a a c b b', ['a', 'b', 'c']);
-  doTest('e e e e DDD ddd DdD: ddd ddd aa aA Aa, bb cc cC e e e', [
+  doTest(1, 'a a a  b  c c  d d d d  e e e e e', ['e', 'd', 'a']);
+  doTest(2, 'a a a c b b', ['a', 'b', 'c']);
+  doTest(3, 'e e e e DDD ddd DdD: ddd ddd aa aA Aa, bb cc cC e e e', [
     'e',
     'ddd',
     'aa',
   ]);
-  doTest("  //wont won't won't ", ["won't", 'wont']);
-  doTest('  , e   .. ', ['e']);
-  doTest('  ...  ', []);
-  doTest("  '  ", []);
+  doTest(4, "  //wont won't won't ", ["won't", 'wont']);
+  doTest(5, '  , e   .. ', ['e']);
+  doTest(6, '  ...  ', []);
+  doTest(7, "  '  ", []);
   doTest(
+    8,
     `In a village of La Mancha, the name of which I have no desire to call to
  mind, there lived not long since one of those gentlemen that keep a lance
  in the lance-rack, an old buckler, a lean hack, and a greyhound for

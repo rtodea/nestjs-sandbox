@@ -1,4 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import {
+  compose,
+  countBy,
+  filter,
+  identity,
+  map,
+  sortBy,
+  split,
+  take,
+  toPairs,
+} from 'ramda';
 
 @Injectable()
 /**
@@ -44,21 +55,22 @@ import { Injectable } from '@nestjs/common';
  */
 export class MostCommonWordService {
   top3Words(text: string): string[] {
-    const wordScore = new Map<string, number>();
-    text.split(' ').reduce((wordScore, word: string) => {
-      const wordKey = word.toLowerCase().replace(/[^a-zA-Z']/g, '');
-      if (!wordKey || wordKey === `'`) {
-        return wordScore;
-      }
-      wordScore.set(wordKey, (wordScore.get(wordKey) || 0) + 1);
+    const cleanWord = (word: string): string =>
+      word.toLowerCase().replace(/[^a-zA-Z']/g, '');
+    const validWord = (word: string): boolean => Boolean(word && word !== `'`);
+    // const log = (x: unknown) => console.log(x);
 
-      return wordScore;
-    }, wordScore);
-    const entries = Array.from(wordScore.entries());
-    const sorted = entries.sort((wordScore1, wordScore2) => {
-      return wordScore2[1] - wordScore1[1];
-    });
+    const sortedWords = compose(
+      take(3),
+      map(([word]: [string, number]) => word),
+      sortBy(([, count]: [string, number]) => -count),
+      toPairs,
+      countBy(identity<string>),
+      filter(validWord),
+      map(cleanWord),
+      split(' '),
+    );
 
-    return sorted.slice(0, 3).map(([word]) => word);
+    return sortedWords(text) as string[];
   }
 }
